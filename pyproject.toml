@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "dijkstras-algorithm"
+version = "0.1.0"
+description = "This project is to implement the Dijkstra's Algorithm in Python and compare it to other approaches and demonstrate our understanding :)"
+authors = [
+    "Kangna Chirag Patel <bmat2322@isibang.ac.in>",
+    "Shankha Suvra Dam <bmat2339@isibang.ac.in>"
+]
+license = "GPL-2.0-only"
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = ">=3.13"
+networkx = ">=3.5,<4.0"
+matplotlib = ">=3.10.7,<4.0.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
