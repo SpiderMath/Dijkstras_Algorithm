@@ -1,20 +1,33 @@
 import time
 import sys
-from utils import Style, clear_screen, BreadCrumbs, MenuType
+from utils import Style, clear_screen
 import tests
 
 # menu_structure:- nested dict to represent menu structure
-menu_structure: MenuType = {
-    "Testing Dijkstra's Algorithm on Custom Test Case": {
-        "Test Adjacency Matrix + Unordered List implementation": tests.dijkstra_adj_matrix.custom(),
-        "Test Adjacency List + Fibonacci Heap implementation": tests.dijkstra_adj_list_fib_heap.custom(),
-        "Test Adjacency List + Binary Heap implementation": tests.dijkstra_adj_list_bin_heap.custom(),
+menu_structure = {
+    "Test on a real-world dataset": {
+        "Adjacency Matrix + Unordered List implementation": tests.dijkstra_adj_matrix.test(dataset="CUSTOM"),
+        "Adjacency List + Binary Heap implementation": tests.dijkstra_adj_list_bin_heap.test(dataset="CUSTOM"),
+        "Adjacency List + Fibonacci Heap implementation": tests.dijkstra_adj_list_fib_heap.test(dataset="CUSTOM"),
+        "Compare various implementations": tests.comparisons.test(dataset="CUSTOM"),
+    },
+    "Test a custom dataset (your dataset should be in tests.txt)": {
+        "Adjacency Matrix + Unordered List implementation": tests.dijkstra_adj_matrix.test(dataset="CUSTOM"),
+        "Adjacency List + Binary Heap implementation": tests.dijkstra_adj_list_bin_heap.test(dataset="CUSTOM"),
+        "Adjacency List + Fibonacci Heap implementation": tests.dijkstra_adj_list_fib_heap.test(dataset="CUSTOM"),
+        "Compare various implementations": tests.comparisons.test(dataset="CUSTOM"),
+    },
+    "Benchmark on our testing datasets": {
+        "Adjacency Matrix + Unordered List implementation": tests.dijkstra_adj_matrix.test(dataset="CUSTOM"),
+        "Adjacency List + Binary Heap implementation": tests.dijkstra_adj_list_bin_heap.test(dataset="CUSTOM"),
+        "Adjacency List + Fibonacci Heap implementation": tests.dijkstra_adj_list_fib_heap.test(dataset="CUSTOM"),
+        "Compare various implementations": tests.comparisons.test(dataset="CUSTOM"),
     },
     "Exit": sys.exit  # The action for "Exit" is to call sys.exit
 }
 
 # --- Main Application Logic ---
-def display_menu(menu: MenuType, breadcrumbs: BreadCrumbs):
+def display_menu(menu, breadcrumbs):
     while True:
         clear_screen()
 

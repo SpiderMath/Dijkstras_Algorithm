@@ -1,10 +1,6 @@
 import time
 import os
 import sys
-from typing import List, Dict, Callable, Any, Union
-
-MenuType = Dict[str, Union['MenuType', Callable[[], Any]]]
-BreadCrumbs = List[str]
 
 class Style:
     RESET = '\033[0m'
