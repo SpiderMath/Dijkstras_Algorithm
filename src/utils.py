@@ -1,0 +1,46 @@
+import time
+import os
+import sys
+from typing import List, Dict, Callable, Any, Union
+
+MenuType = Dict[str, Union['MenuType', Callable[[], Any]]]
+BreadCrumbs = List[str]
+
+class Style:
+    """A class to hold ANSI escape codes for styling terminal text."""
+    RESET = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+    # Colors
+    RED = '\033[91m'
+    GREEN = '\033[92m'
+    YELLOW = '\033[93m'
+    BLUE = '\033[94m'
+    MAGENTA = '\033[95m'
+    CYAN = '\033[96m'
+
+def clear_screen():
+    """Clears the terminal screen."""
+    if os.name == 'nt': # Windows being not-Unix as usual :)
+        os.system('cls')
+    else: # Mac and Linux
+        os.system('clear')
+
+
+def loading_spinner(duration: int = 3):
+    """Displays a simple loading spinner for a given duration."""
+    spinner_chars = ['|', '/', '-', '\\']
+
+    print("\nProcessing your request...")
+
+    start_time = time.time()
+    while (time.time() - start_time) < duration:
+        for char in spinner_chars:
+            sys.stdout.write(f'\r{Style.YELLOW}{char}{Style.RESET} Please wait... ')
+            sys.stdout.flush()
+            time.sleep(0.1)
+
+    sys.stdout.write('\r' + ' ' * 30 + '\r')
+    print(f"{Style.GREEN}🥳Operation completed!{Style.RESET}")
+    time.sleep(1.5)
