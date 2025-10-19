@@ -3,9 +3,6 @@ import math
 from typing import Optional, List, Hashable
 
 class Node:
-    """
-    Represents a node within the Fibonacci Heap.
-    """
     def __init__(self, key: float, value: Hashable):
         # for priority
         self.key: float = key
@@ -20,17 +17,11 @@ class Node:
         self.mark: bool = False
 
 class FibonacciHeap:
-    """
-    A custom implementation of Fibonacci Heap
-    """
     def __init__(self) -> None:
         self.min_node: Optional[Node] = None
         self.total_nodes: int = 0
 
     def insert(self, key: float, value: Hashable) -> Node:
-        """
-        Inserts a new key-value pair into the heap. O(1) amortized time.
-        """
         new_node = Node(key, value)
 
         # Merge new node into the root list
@@ -49,9 +40,6 @@ class FibonacciHeap:
 
 
     def extract_min(self) -> Optional[Node]:
-        """
-        Removes and returns the node with the minimum key. O(log n) amortized time.
-        """
         min_val = self.min_node
         if min_val is None:
             return None
@@ -88,9 +76,6 @@ class FibonacciHeap:
         return min_val
 
     def decrease_key(self, node: Node, new_key: float) -> None:
-        """
-        Decreases the key of a given node. O(1) amortized time.
-        """
         if new_key > node.key:
             raise ValueError("New key is greater than the current key.")
 
@@ -108,9 +93,6 @@ class FibonacciHeap:
 
 
     def _consolidate(self) -> None:
-        """
-        Internal method to consolidate the root list by linking trees of the same degree.
-        """
         if self.min_node is None:
             return
 
@@ -130,7 +112,6 @@ class FibonacciHeap:
             while degree_table[degree]:
                 other = degree_table[degree]
 
-                # Type-checker fix: ensure 'other' is not None
                 if other is None:
                     break
 
@@ -160,9 +141,6 @@ class FibonacciHeap:
 
 
     def _link_trees(self, child: Node, parent: Node) -> None:
-        """
-        Internal method to make one node the child of another.
-        """
         child.left.right = child.right
         child.right.left = child.left
         child.parent = parent
@@ -182,9 +160,6 @@ class FibonacciHeap:
 
 
     def _cut(self, node: Node, parent: Node) -> None:
-        """
-        Internal method to cut a node from its parent and move it to the root list.
-        """
         # Remove node from its sibling list
         if node == node.right:
             parent.child = None
@@ -197,7 +172,6 @@ class FibonacciHeap:
         parent.degree -= 1
 
         # Add node to the root list
-        # Type-checker fix: handle case where min_node might be None
         if self.min_node is None:
             self.min_node = node
             node.left = node
@@ -213,9 +187,6 @@ class FibonacciHeap:
 
 
     def _cascading_cut(self, node: Node) -> None:
-        """
-        Internal method to perform a cascading cut on a node's ancestors.
-        """
         parent = node.parent
         if parent:
             if not node.mark:

@@ -7,7 +7,6 @@ MenuType = Dict[str, Union['MenuType', Callable[[], Any]]]
 BreadCrumbs = List[str]
 
 class Style:
-    """A class to hold ANSI escape codes for styling terminal text."""
     RESET = '\033[0m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
@@ -21,7 +20,6 @@ class Style:
     CYAN = '\033[96m'
 
 def clear_screen():
-    """Clears the terminal screen."""
     if os.name == 'nt': # Windows being not-Unix as usual :)
         os.system('cls')
     else: # Mac and Linux
@@ -29,7 +27,6 @@ def clear_screen():
 
 
 def loading_spinner(duration: int = 3):
-    """Displays a simple loading spinner for a given duration."""
     spinner_chars = ['|', '/', '-', '\\']
 
     print("\nProcessing your request...")

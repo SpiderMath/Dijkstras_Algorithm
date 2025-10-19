@@ -1,7 +1,4 @@
 def convert_graph_to_matrix(graph):
-    """
-    This function outputs the adjacency matrix of the input graph
-    """
     nodes = list(graph.nodes())
     node_to_idx = {node: i for i, node in enumerate(nodes)}
     num_nodes = len(nodes)
@@ -26,9 +23,6 @@ def convert_graph_to_matrix(graph):
     return matrix, node_to_idx, nodes
 
 def dijkstra_matrix_simulation(adj_matrix, nodes, start_node_idx):
-    """
-    Implements Dijkstra's using a pre-computed adjacency matrix for true O(1) edge checks.
-    """
     num_nodes = len(nodes)
     distances = {i: float('inf') for i in range(num_nodes)}
     predecessors_idx = {i: None for i in range(num_nodes)}

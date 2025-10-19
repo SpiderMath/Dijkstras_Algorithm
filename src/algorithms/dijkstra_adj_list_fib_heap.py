@@ -1,9 +1,6 @@
 from .data_structures import fib_heap
 
 def dijkstra_fibonacci_heap(graph, start_node):
-    """
-    Implements Dijkstra's using an adjacency list concept and a Fibonacci heap.
-    """
     distances = {node: float('inf') for node in graph.nodes()}
     predecessors = {node: None for node in graph.nodes()}
     distances[start_node] = 0

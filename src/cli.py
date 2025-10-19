@@ -1,6 +1,6 @@
 import time
 import sys
-from utils import Style, clear_screen, loading_spinner, BreadCrumbs, MenuType
+from utils import Style, clear_screen, BreadCrumbs, MenuType
 import tests
 
 # menu_structure:- nested dict to represent menu structure
@@ -14,15 +14,7 @@ menu_structure: MenuType = {
 }
 
 # --- Main Application Logic ---
-
 def display_menu(menu: MenuType, breadcrumbs: BreadCrumbs):
-    """
-    Displays a menu to the user and handles navigation.
-
-    Args:
-        menu (dict): The menu dictionary to display.
-        breadcrumbs (list): A list of strings representing the user's path.
-    """
     while True:
         clear_screen()
 
@@ -33,21 +25,16 @@ def display_menu(menu: MenuType, breadcrumbs: BreadCrumbs):
         else:
             print("Welcome! Please select an option below.\n")
 
-        # Convert menu keys to a list to be able to use index
         options = list(menu.keys())
 
-        # Print menu options
         for i, option in enumerate(options, 1):
             print(f"  {Style.YELLOW}{i}.{Style.RESET} {option}")
 
-        # Add a "Back" option if we are in a submenu
         if breadcrumbs:
             print(f"  {Style.YELLOW}0.{Style.RESET} Back")
 
-        # Get user input
         choice = input("\nEnter your choice: ")
 
-        # Validate input
         if not choice.isdigit():
             print(f"\n{Style.RED}Invalid input. Please enter a number.{Style.RESET}")
             time.sleep(1)
@@ -70,8 +57,7 @@ def display_menu(menu: MenuType, breadcrumbs: BreadCrumbs):
         selection_value = menu[selection_key]
 
         if isinstance(selection_value, dict):
-            # If the value is a dictionary, it's a submenu.
-            # Call display_menu recursively for the submenu.
+            # if the value is a dictionary, it's a submenu.
             new_breadcrumbs = breadcrumbs + [selection_key]
             display_menu(selection_value, new_breadcrumbs)
         else:
@@ -84,7 +70,6 @@ def display_menu(menu: MenuType, breadcrumbs: BreadCrumbs):
 
 
 def main():
-    """Main function, the entry point of the CLI application."""
     try:
         display_menu(menu_structure, [])
     except KeyboardInterrupt:
