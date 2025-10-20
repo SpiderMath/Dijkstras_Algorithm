@@ -6,10 +6,10 @@ import tests
 # menu_structure:- nested dict to represent menu structure
 menu_structure = {
     "Test on a real-world dataset": {
-        "Adjacency Matrix + Unordered List implementation": tests.dijkstra_adj_matrix.test(dataset="CUSTOM"),
-        "Adjacency List + Binary Heap implementation": tests.dijkstra_adj_list_bin_heap.test(dataset="CUSTOM"),
-        "Adjacency List + Fibonacci Heap implementation": tests.dijkstra_adj_list_fib_heap.test(dataset="CUSTOM"),
-        "Compare various implementations": tests.comparisons.test(dataset="CUSTOM"),
+        "Adjacency Matrix + Unordered List implementation": tests.dijkstra_adj_matrix.test(dataset="REAL_WORLD"),
+        "Adjacency List + Binary Heap implementation": tests.dijkstra_adj_list_bin_heap.test(dataset="REAL_WORLD"),
+        "Adjacency List + Fibonacci Heap implementation": tests.dijkstra_adj_list_fib_heap.test(dataset="REAL_WORLD"),
+        "Compare various implementations": tests.comparisons.test(dataset="REAL_WORLD"),
     },
     "Test a custom dataset (your dataset should be in tests.txt)": {
         "Adjacency Matrix + Unordered List implementation": tests.dijkstra_adj_matrix.test(dataset="CUSTOM"),
@@ -18,10 +18,7 @@ menu_structure = {
         "Compare various implementations": tests.comparisons.test(dataset="CUSTOM"),
     },
     "Benchmark on our testing datasets": {
-        "Adjacency Matrix + Unordered List implementation": tests.dijkstra_adj_matrix.test(dataset="CUSTOM"),
-        "Adjacency List + Binary Heap implementation": tests.dijkstra_adj_list_bin_heap.test(dataset="CUSTOM"),
-        "Adjacency List + Fibonacci Heap implementation": tests.dijkstra_adj_list_fib_heap.test(dataset="CUSTOM"),
-        "Compare various implementations": tests.comparisons.test(dataset="CUSTOM"),
+        "Compare various implementations": tests.comparisons.test(dataset="BENCHMARK"),
     },
     "Exit": sys.exit  # The action for "Exit" is to call sys.exit
 }

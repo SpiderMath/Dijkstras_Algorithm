@@ -44,36 +44,61 @@ class FibonacciHeap:
         if min_val is None:
             return None
 
-        # Promote all children of the minimum node to the root list
-        if min_val.child:
-            child = min_val.child
-            while True:
-                child.parent = None
-                child = child.right
-                if child == min_val.child:
-                    break
-
-            # Merge child list with root list (which min_val is part of)
-            min_left, min_right = min_val.left, min_val.right
-            child_left, child_right = child.left, child
-
-            min_right.left = child_left
-            child_left.right = min_right
-            min_left.right = child_right
-            child_right.left = min_left
-
-        # Remove the minimum node from the root list
+        # [1] Remove min_val from the root list
         min_val.left.right = min_val.right
         min_val.right.left = min_val.left
 
+        # [2] Determine the new root list head (temporarily)
         if min_val == min_val.right:
-            self.min_node = None
+            # min_val was the only root
+            new_root_list_head = None
         else:
-            self.min_node = min_val.right
+            # there are other roots
+            new_root_list_head = min_val.right
+
+        # [3] Handle children
+        if min_val.child:
+            child_list_start = min_val.child
+
+            # Set parent=None for all children
+            temp = child_list_start
+            while True:
+                temp.parent = None
+                temp = temp.right
+                if temp == child_list_start:
+                    break
+
+            # Merge child list with the new root list
+            if new_root_list_head:
+                # Get ends of both lists
+                root_list_end = new_root_list_head.left
+                child_list_end = child_list_start.left
+
+                # Splice: root_end <-> child_start ... child_end <-> root_start
+                root_list_end.right = child_list_start
+                child_list_start.left = root_list_end
+
+                child_list_end.right = new_root_list_head
+                new_root_list_head.left = child_list_end
+            else:
+                # Child list *is* the new root list
+                new_root_list_head = child_list_start
+
+        # [4] Set the final min_node and consolidate
+        self.min_node = new_root_list_head
+        if self.min_node:
             self._consolidate()
 
         self.total_nodes -= 1
+
+        # Isolate the returned node
+        min_val.left = min_val
+        min_val.right = min_val
+        min_val.child = None
+        min_val.parent = None
+            
         return min_val
+
 
     def decrease_key(self, node: Node, new_key: float) -> None:
         if new_key > node.key:
@@ -87,34 +112,55 @@ class FibonacciHeap:
             self._cut(node, parent)
             self._cascading_cut(parent)
 
-        # Update the heap's minimum pointer if necessary
         if self.min_node is None or node.key < self.min_node.key:
+            # Check if node is a root (no parent) before assigning
+            if node.parent is None:
+                self.min_node = node            
+            
             self.min_node = node
+            if parent and node.key < parent.key:
+                self._cut(node, parent)
+                self._cascading_cut(parent)
 
+            if self.min_node is None or node.key < self.min_node.key:
+                # ONLY update if the node is a root
+                if node.parent is None:
+                    self.min_node = node
 
+        
     def _consolidate(self) -> None:
         if self.min_node is None:
             return
 
-        max_degree = int(math.log(self.total_nodes, (1 + math.sqrt(5)) / 2))
+        if self.total_nodes == 0:
+            max_degree = 0
+        else:
+            phi = (1 + math.sqrt(5)) / 2
+            max_degree = int(math.log(self.total_nodes, phi))
+            
         degree_table: List[Optional[Node]] = [None] * (max_degree + 2) # Buffer
 
         current_roots: List[Node] = []
         node = self.min_node
+        
+        if node is None:
+            return
+            
         while True:
             current_roots.append(node)
             node = node.right
             if node == self.min_node:
                 break
-
+        
         for node in current_roots:
+            node.parent = None
             degree = node.degree
             while degree_table[degree]:
                 other = degree_table[degree]
 
                 if other is None:
                     break
-
+                    
                 if node.key > other.key:
                     node, other = other, node
 
@@ -123,7 +169,6 @@ class FibonacciHeap:
                 degree += 1
             degree_table[degree] = node
 
-        # Rebuilding root list from consolidated trees
         self.min_node = None
         for node in degree_table:
             if node is not None:
@@ -138,7 +183,6 @@ class FibonacciHeap:
                     self.min_node.right = node
                     if node.key < self.min_node.key:
                         self.min_node = node
-
 
     def _link_trees(self, child: Node, parent: Node) -> None:
         child.left.right = child.right

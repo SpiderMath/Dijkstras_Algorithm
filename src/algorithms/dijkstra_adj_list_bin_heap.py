@@ -2,7 +2,7 @@ import heapq
 
 def dijkstra_binary_heap(graph, start_node):
     distances = {node: float('inf') for node in graph.nodes()}
-    predecessors = {node: None for node in graph.nodes()}
+    predecessors = {node: [] for node in graph.nodes()}
     distances[start_node] = 0
     pq = [(0, start_node)]
 
@@ -18,7 +18,7 @@ def dijkstra_binary_heap(graph, start_node):
 
             if new_distance < distances[neighbor]:
                 distances[neighbor] = new_distance
-                predecessors[neighbor] = current_node
+                predecessors[neighbor] = [current_node]
                 heapq.heappush(pq, (new_distance, neighbor))
 
     return distances, predecessors

@@ -1,56 +1,62 @@
-def convert_graph_to_matrix(graph):
-    nodes = list(graph.nodes())
-    node_to_idx = {node: i for i, node in enumerate(nodes)}
-    num_nodes = len(nodes)
+import math
 
-    matrix = [[float('inf')] * num_nodes for _ in range(num_nodes)]
-    for i in range(num_nodes):
-        matrix[i][i] = 0
+def dijkstra_adj_matrix(G, source_node):
+    nodes = list(G.nodes())
+    V = len(nodes)
 
-    is_directed = graph.is_directed()
+    if source_node not in nodes:
+        raise ValueError("Source node is not in the graph.")
 
-    for u, v, data in graph.edges(data=True):
-        weight = data.get('weight', 1.0)
-        u_idx, v_idx = node_to_idx[u], node_to_idx[v]
+    node_to_index = {node: i for i, node in enumerate(nodes)}
+    adj_matrix = [[0 for _ in range(V)] for _ in range(V)]
 
-        # Only set the outgoing edge
-        matrix[u_idx][v_idx] = weight
+    for u, neighbors in G.adj.items():
+        u_index = node_to_index[u]
+        for v, edge_data in neighbors.items():
+            v_index = node_to_index[v]
+            adj_matrix[u_index][v_index] = edge_data.get('weight', 1)
 
-        # If the graph is NOT directed, add the symmetric edge
-        if not is_directed:
-            matrix[v_idx][u_idx] = weight
+    source_index = node_to_index[source_node]
 
-    return matrix, node_to_idx, nodes
+    dist = [math.inf] * V
+    visited = [False] * V
+    predecessors = [None] * V
 
-def dijkstra_matrix_simulation(adj_matrix, nodes, start_node_idx):
-    num_nodes = len(nodes)
-    distances = {i: float('inf') for i in range(num_nodes)}
-    predecessors_idx = {i: None for i in range(num_nodes)}
-    distances[start_node_idx] = 0
-    unvisited_nodes_idx = set(range(num_nodes))
+    dist[source_index] = 0
 
-    while unvisited_nodes_idx:
-        current_min_idx = -1
-        min_distance = float('inf')
-        for idx in unvisited_nodes_idx:
-            if distances[idx] < min_distance:
-                min_distance = distances[idx]
-                current_min_idx = idx
+    for _ in range(V):
+        min_dist = math.inf
+        u = -1
 
-        if current_min_idx == -1 or distances[current_min_idx] == float('inf'):
+        for i in range(V):
+            if not visited[i] and dist[i] < min_dist:
+                min_dist = dist[i]
+                u = i
+
+        if u == -1:
             break
 
-        for neighbor_idx in range(num_nodes):
-            weight = adj_matrix[current_min_idx][neighbor_idx]
-            if weight != float('inf'):
-                new_distance = distances[current_min_idx] + weight
-                if new_distance < distances[neighbor_idx]:
-                    distances[neighbor_idx] = new_distance
-                    predecessors_idx[neighbor_idx] = current_min_idx
+        visited[u] = True
 
-        unvisited_nodes_idx.remove(current_min_idx)
+        for v in range(V):
+            edge_weight = adj_matrix[u][v]
 
-    final_distances = {nodes[i]: dist for i, dist in distances.items()}
-    final_predecessors = {nodes[i]: (nodes[p_idx] if p_idx is not None else None) for i, p_idx in predecessors_idx.items()}
+            if not visited[v] and edge_weight > 0 and dist[u] != math.inf and dist[u] + edge_weight < dist[v]:
+
+                dist[v] = dist[u] + edge_weight
+                predecessors[v] = u
+
+    final_distances = {}
+    final_predecessors = {}
+
+    for i in range(V):
+        node_label = nodes[i]
+        final_distances[node_label] = dist[i]
+
+        pred_index = predecessors[i]
+        if pred_index is not None:
+            final_predecessors[node_label] = [nodes[pred_index]]
+        else:
+            final_predecessors[node_label] = []
 
     return final_distances, final_predecessors
